@@ -49,7 +49,8 @@ def clean_october_dataset(input_file: str):
     oct_comments = df_comments[mask_oct_comments].copy()
 
     # 输出版本 A：保留冗余的 10 月版本 (仅剔除 9 月及更早)
-    out_all = p.parent / "weibo_202610_all.xlsx"
+    prefix = p.stem.split("_")[0] if "_" in p.stem else "data"
+    out_all = p.parent / f"{prefix}_202610_all.xlsx"
     with pd.ExcelWriter(out_all, engine="openpyxl") as writer:
         oct_contents.to_excel(writer, sheet_name="Contents", index=False)
         oct_comments.to_excel(writer, sheet_name="Comments", index=False)
@@ -57,7 +58,7 @@ def clean_october_dataset(input_file: str):
     print(f"  Contents: {len(oct_contents)}, Comments: {len(oct_comments)}")
 
     # 输出版本 B：去重纯净版 (按 note_id 和 comment_id 排重，最适合情感分析)
-    out_dedup = p.parent / "weibo_202610_dedup.xlsx"
+    out_dedup = p.parent / f"{prefix}_202610_dedup.xlsx"
     dedup_contents = oct_contents.drop_duplicates(subset=["note_id"])
     dedup_comments = oct_comments.drop_duplicates(subset=["comment_id"])
     with pd.ExcelWriter(out_dedup, engine="openpyxl") as writer:
@@ -68,5 +69,7 @@ def clean_october_dataset(input_file: str):
 
 
 if __name__ == "__main__":
-    clean_october_dataset(r"data/weibo/weibo_search_20261029_235834.xlsx")
+    import sys
+    target = sys.argv[1] if len(sys.argv) > 1 else r"data/weibo/weibo_search_20261029_235834.xlsx"
+    clean_october_dataset(target)
 

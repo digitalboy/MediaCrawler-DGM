@@ -21,7 +21,9 @@
 # Xiaohongshu platform configuration
 
 # Sorting method, the specific enumeration value is in media_platform/xhs/field.py
-SORT_TYPE = "popularity_descending"
+# 经验教训备注：抓取指定月份/近期数据时，必须设为 "time_descending"（最新优先），
+# 避免 "popularity_descending" 召回过多往年历史热门笔记而遗漏当月内容。
+SORT_TYPE = "time_descending"
 
 # Specify the note URL list, which must carry the xsec_token parameter
 XHS_SPECIFIED_NOTE_URL_LIST = [

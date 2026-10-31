@@ -79,6 +79,8 @@ async def update_xhs_note(note_item: Dict):
         "desc": note_item.get("desc", ""),  # Note description
         "video_url": video_url,  # Note video url
         "time": note_item.get("time"),  # Note publish time
+        # 经验教训备注：增加标准可读时间字段 create_date_time，与微博等平台数据格式对齐，便于统一时间过滤与投研分析
+        "create_date_time": utils.get_time_str_from_unix_time(note_item.get("time")) if note_item.get("time") else "",
         "last_update_time": note_item.get("last_update_time", 0),  # Note last update time
         "creator_hash": anonymize_user_id(user_info.get("user_id")),  # 创作者匿名哈希(不存原始 user_id)
         "nickname": mask_nickname(user_info.get("nickname")),  # 用户昵称(已脱敏)
@@ -130,6 +132,8 @@ async def update_xhs_note_comment(note_id: str, comment_item: Dict):
     local_db_item = {
         "comment_id": comment_id,  # Comment ID
         "create_time": comment_item.get("create_time"),  # Comment time
+        # 经验教训备注：增加标准可读时间字段 create_date_time，与微博等平台数据格式对齐，便于统一时间过滤与投研分析
+        "create_date_time": utils.get_time_str_from_unix_time(comment_item.get("create_time")) if comment_item.get("create_time") else "",
         "note_id": note_id,  # Note ID
         "content": comment_item.get("content"),  # Comment content
         "creator_hash": anonymize_user_id(user_info.get("user_id")),  # 创作者匿名哈希(不存原始 user_id)
